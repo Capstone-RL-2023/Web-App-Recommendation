@@ -9,9 +9,9 @@ from eval import evaluate
 from flask import Flask, request, jsonify
 
 ROOT_DIR = os.getcwd()
-DATA_DIR = os.path.join(ROOT_DIR, '/Capstone/React-App/backend/ml-1m/')
-SAVED_ACTOR = ROOT_DIR+'/save_weights/actor_model.h5'
-SAVED_CRITIC = ROOT_DIR+'/save_weights/critic_model.h5'
+DATA_DIR = os.path.join(ROOT_DIR, 'ml-1m')
+SAVED_ACTOR = os.path.join(ROOT_DIR, 'save_weights/actor_model.h5')
+SAVED_CRITIC = os.path.join(ROOT_DIR, 'save_weights/critic_model.h5')
 STATE_SIZE = 10
 TOP_K = 10
 app = Flask(__name__)
@@ -19,10 +19,15 @@ app = Flask(__name__)
 
 @app.route('/recommend', methods=['GET'])
 def get_recommendations():
-    id = request.args.get('user_id')
+    args = request.args
+    id = args.get('user_id')
     user_id = int(id) if id else 4833
     response = {"success": False,
                 "user_id": user_id}
+
+    if (args.get('movie_id')):
+        # get next sequence based off movie choosen
+        return True
 
     # Load and modify dataset
     try:
