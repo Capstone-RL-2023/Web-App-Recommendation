@@ -1,6 +1,9 @@
 // Importing modules
 import React, {useState, useEffect} from "react";
 import "./App.css";
+import Button from '@mui/material/Button';
+import AppBar from '@mui/material/AppBar';
+
   
 function App() {
     const [data, setData] = useState([{}])
@@ -23,15 +26,19 @@ function App() {
 
     
     return (
-        <div className="App">
-            <h1>Recommendation System</h1>
+        <div>
+            <AppBar position="static" title = "">
+                <h3>Recommendation System</h3>
+            </AppBar>
+            <div className="App">
             <p><b>recommendation: </b>{data.recommendations}</p>
-            <button className="Button-stats" onClick={handleClick}>View Stats</button>
+            <Button variant="contained" className="Button-stats" onClick={handleClick}>View Stats</Button>
 
             <div style={{ display: toggle ? 'block' : 'none' }}>
                     <p><b>ndcg: </b>{data.ndcg}</p>
                     <p><b>precision: </b>{data.precision}</p>
                     <p><b>user_id: </b>{data.user_id}</p>
+            </div>
             </div>
         </div>
     );
