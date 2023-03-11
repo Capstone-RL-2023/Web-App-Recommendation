@@ -1,12 +1,11 @@
 import pandas as pd
 import numpy as np
 import os
-import json
 
 from envs import OfflineEnv
 from recommender import DRRAgent
 from eval import evaluate
-from flask import Flask, request, jsonify
+from flask import Flask, request
 
 ROOT_DIR = os.getcwd()
 DATA_DIR = os.path.join(ROOT_DIR, 'ml-1m')
@@ -59,14 +58,17 @@ def get_recommendations():
         recommender.actor.build_networks()
         recommender.critic.build_networks()
         recommender.load_model(SAVED_ACTOR, SAVED_CRITIC)
-        # if check movies is true, you can check the recommended movies
-        recommended_items, precision, ndcg, reward = evaluate(
-            recommender, env, check_movies=True, top_k=TOP_K)
 
-        response["recommendations"] = json.dumps(recommended_items.tolist())
+        # if check movies is true, you can check the recommended movies
+        recommended_items, recommended_ids, precision, ndcg, reward = evaluate(
+            recommender, env, check_movies=True, top_k=TOP_K)
+        recommendations = {str(recommended_ids[i]): recommended_items[i].tolist()
+                           for i in range(len(recommended_ids))}
+        response["recommendations"] = recommendations
         response["precision"] = precision
         response["ndcg"] = ndcg
         response["success"] = True
+        print(response)
     except Exception as e:
         response["error"] = str(e)
 

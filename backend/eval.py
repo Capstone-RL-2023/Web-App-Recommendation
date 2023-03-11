@@ -59,7 +59,7 @@ def evaluate(recommender, env, check_movies=False, top_k=False):
     if check_movies:
         print(
             f'precision : {mean_precision/steps}, ngcg : {mean_ndcg/steps}, episode_reward : {episode_reward}')
-    return np.array(env.get_items_names(recommended_item), dtype=object), mean_precision, mean_ndcg, reward
+    return np.array(env.get_items_names(recommended_item), dtype=object), recommended_item, mean_precision, mean_ndcg, reward
 
 
 def calculate_ndcg(rel, irel):
