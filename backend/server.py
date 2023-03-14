@@ -19,14 +19,10 @@ app = Flask(__name__)
 @app.route('/recommend', methods=['GET'])
 def get_recommendations():
     args = request.args
-    id = args.get('user_id')
-    user_id = int(id) if id else 4833
+    user_id = args.get('user_id', type=int) if args.get(
+        'user_id', type=int) else 4833
     response = {"success": False,
                 "user_id": user_id}
-
-    if (args.get('movie_id')):
-        # get next sequence based off movie choosen
-        return True
 
     # Load and modify dataset
     try:
@@ -35,8 +31,6 @@ def get_recommendations():
         users_history_lens = np.load(ROOT_DIR + '/data/users_histroy_len.npy')
         ratings_list = [i.strip().split("::") for i in open(
             os.path.join(DATA_DIR, 'ratings.dat'), 'r').readlines()]
-        users_list = [i.strip().split("::") for i in open(
-            os.path.join(DATA_DIR, 'users.dat'), 'r').readlines()]
         movies_list = [i.strip().split("::") for i in open(
             os.path.join(DATA_DIR, 'movies.dat'), encoding='latin-1').readlines()]
         ratings_df = pd.DataFrame(ratings_list, columns=[
@@ -44,6 +38,10 @@ def get_recommendations():
         movies_id_to_movies = {movie[0]: movie[1:] for movie in movies_list}
         ratings_df = ratings_df.applymap(int)
         ratings_df = ratings_df.sort_values(by='Timestamp', ascending=True)
+
+        if (args.get('movie_id')):
+            ratings_df.loc[(ratings_df['MovieID'] == args.get('movie_id', type=int)) & (
+                ratings_df['UserID'] == user_id), 'Rating'] = args.get('rating', type=int)
 
         # Set parameters
         users_num = max(ratings_df["UserID"])+1
