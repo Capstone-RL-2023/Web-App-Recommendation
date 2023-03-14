@@ -21,6 +21,8 @@ def get_recommendations():
     args = request.args
     user_id = args.get('user_id', type=int) if args.get(
         'user_id', type=int) else 4833
+    movie_id = args.get('movie_id', type=int)
+    rating = args.get('rating', type=int)
     response = {"success": False,
                 "user_id": user_id}
 
@@ -39,16 +41,19 @@ def get_recommendations():
         ratings_df = ratings_df.applymap(int)
         ratings_df = ratings_df.sort_values(by='Timestamp', ascending=True)
 
-        if (args.get('movie_id')):
-            ratings_df.loc[(ratings_df['MovieID'] == args.get('movie_id', type=int)) & (
-                ratings_df['UserID'] == user_id), 'Rating'] = args.get('rating', type=int)
-
         # Set parameters
         users_num = max(ratings_df["UserID"])+1
         items_num = max(ratings_df["MovieID"])+1
         eval_users_num = int(users_num * 0.2)
         eval_users_dict = {k: users_dict.item().get(k) for k in range(
             users_num - eval_users_num, users_num)}
+
+        if (movie_id):
+            for key, val in enumerate(eval_users_dict[user_id]):
+                if val[0] == movie_id:
+                    eval_users_dict[user_id][key] = (movie_id, rating)
+                    break
+
         # Get recommendations
         env = OfflineEnv(eval_users_dict, users_history_lens,
                          movies_id_to_movies, STATE_SIZE, fix_user_id=user_id)
