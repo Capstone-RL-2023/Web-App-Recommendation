@@ -4,16 +4,25 @@ import os
 
 from envs import OfflineEnv
 from recommender import DRRAgent
-from eval import evaluate
-from flask import Flask, request
+from eval import evaluate, evaluate_next
+from flask import Flask, request, session
 
 ROOT_DIR = os.getcwd()
 DATA_DIR = os.path.join(ROOT_DIR, 'ml-1m')
 SAVED_ACTOR = os.path.join(ROOT_DIR, 'save_weights/actor_model.h5')
 SAVED_CRITIC = os.path.join(ROOT_DIR, 'save_weights/critic_model.h5')
 STATE_SIZE = 10
-TOP_K = 10
+TOP_K = 1
 app = Flask(__name__)
+
+
+class DataStorage():
+    env = None
+    recommender = None
+    recommended_items = None
+
+
+data_storage = DataStorage()
 
 
 @app.route('/recommend', methods=['GET'])
@@ -65,16 +74,34 @@ def get_recommendations():
         # if check movies is true, you can check the recommended movies
         recommended_items, recommended_ids, precision, ndcg, reward = evaluate(
             recommender, env, check_movies=True, top_k=TOP_K)
+        print(f'ITEM {recommended_items}')
+        data_storage.env = env
+        data_storage.recommender = recommender
+        data_storage.recommended_items = recommended_items
+
         recommendations = {str(recommended_ids[i]): recommended_items[i].tolist()
                            for i in range(len(recommended_ids))}
         response["recommendations"] = recommendations
         response["precision"] = precision
         response["ndcg"] = ndcg
         response["success"] = True
-        print(response)
     except Exception as e:
         response["error"] = str(e)
 
+    return response, 200
+
+
+@app.route('/new_recommendation', methods=['GET'])
+def get_new_recommendations():
+    response = {"success": False}
+    recommended_items, recommended_ids, precision, ndcg, reward = evaluate_next(
+        data_storage.recommender, data_storage.env, check_movies=True, top_k=TOP_K)
+    recommendations = {str(recommended_ids[i]): recommended_items[i].tolist(
+    ) for i in range(len(recommended_ids))}
+    response["recommendations"] = recommendations
+    response["precision"] = precision
+    response["ndcg"] = ndcg
+    response["success"] = True
     return response, 200
 
 
