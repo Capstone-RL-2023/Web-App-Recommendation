@@ -11,7 +11,7 @@ const Home = ({ movie_array }) => {
 
   return (
     <div className="container">
-      {movies?.map((movie) => (
+      {movies?.slice(0, 1).map((movie) => (
         <MovieCard movie={movie} />
       ))}
     </div>
