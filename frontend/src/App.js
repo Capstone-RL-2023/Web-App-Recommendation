@@ -6,8 +6,7 @@ import AppBar from "@mui/material/AppBar";
 import Movies from "./MovieBox";
 
 function App() {
-  const [stats, setStats] = useState({});
-  const [recommendations, setRecommendations] = useState([]);
+  const [data, setData] = useState({});
   const [toggle, setToggle] = useState(false);
 
   const showStats = (e) => {
@@ -20,30 +19,37 @@ function App() {
     getRecommendations("/new_recommendation");
   };
 
+  const toJson = (response) => response.json();
+
   const getRecommendations = async (url) => {
-    const res = await fetch(url);
-    const data = await res.json();
-    setStats({
-      ndcg: data.ndcg,
-      precision: data.precision,
-      user_id: data.user_id,
-    });
-    setRecommendations(data.recommendations);
+    fetch(url)
+      .then(toJson)
+      .then((data) => {
+        var dict_rec = data.recommendations;
+        const movie_array = [];
+        var i = 0;
+        console.log(data);
+        // var first_mov_ex = movie_array[0]?.substring(0, movie_array[0].length - 7);
+        // first_mov_ex = first_mov_ex?.replace(/\s/g, "+");
+        for (var key in dict_rec) {
+          movie_array[i] = dict_rec[key][0];
+          i++;
+        }
+        return fetch(
+          "https://api.themoviedb.org/3/search/movie?api_key=15d2ea6d0dc1d476efbca3eba2b9bbfb&query=" +
+            movie_array
+        )
+          .then(toJson)
+          .then((movies) => {
+            setData({ ...data, movies: movies.results });
+          });
+      });
   };
 
   // Using useEffect for single rendering
   useEffect(() => {
     getRecommendations("/recommend");
   }, []);
-
-  var dict_rec = recommendations;
-  const movie_array = [];
-  var i = 0;
-
-  for (var key in dict_rec) {
-    movie_array[i] = dict_rec[key][0];
-    i++;
-  }
 
   return (
     <div>
@@ -52,7 +58,7 @@ function App() {
       </AppBar>
       <div className="App">
         <div>
-          <Movies key={recommendations} movie_array={movie_array} />
+          <Movies movie_array={data.movies} />
           <Button
             variant="contained"
             className="Button-stats"
@@ -69,19 +75,18 @@ function App() {
         >
           View Stats
         </Button>
-
         <div style={{ display: toggle ? "block" : "none" }}>
           <p>
             <b>ndcg: </b>
-            {stats.ndcg}
+            {data.ndcg}
           </p>
           <p>
             <b>precision: </b>
-            {stats.precision}
+            {data.precision}
           </p>
           <p>
             <b>user_id: </b>
-            {stats.user_id}
+            {data.user_id}
           </p>
         </div>
       </div>
