@@ -28,19 +28,25 @@ function App() {
         var dict_rec = data.recommendations;
         const movie_array = [];
         var i = 0;
-        console.log(data);
-        // var first_mov_ex = movie_array[0]?.substring(0, movie_array[0].length - 7);
-        // first_mov_ex = first_mov_ex?.replace(/\s/g, "+");
+
         for (var key in dict_rec) {
           movie_array[i] = dict_rec[key][0];
           i++;
         }
+        var first_mov_ex = movie_array[0]?.substring(
+          0,
+          movie_array[0].length - 7
+        );
+        first_mov_ex = first_mov_ex?.replace(/\s/g, "+");
+        console.log(movie_array);
         return fetch(
           "https://api.themoviedb.org/3/search/movie?api_key=15d2ea6d0dc1d476efbca3eba2b9bbfb&query=" +
-            movie_array
+            first_mov_ex
         )
           .then(toJson)
           .then((movies) => {
+            console.log(data);
+            console.log(movies);
             setData({ ...data, movies: movies.results });
           });
       });
@@ -58,7 +64,13 @@ function App() {
       </AppBar>
       <div className="App">
         <div>
-          <Movies movie_array={data.movies} />
+          <Movies
+            key={
+              Object.keys(data | {})?.length &&
+              Object.keys(data?.recommendations)[0]
+            }
+            movie_array={data.movies}
+          />
           <Button
             variant="contained"
             className="Button-stats"
