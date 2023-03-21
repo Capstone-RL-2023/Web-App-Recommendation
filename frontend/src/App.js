@@ -29,7 +29,7 @@ function App() {
         <div>
             <AppBar position="static" title = "">
                 <div  className="navbar">
-                    <h3>Recommendation System</h3>
+                    <h3>Sequential Recommendation System</h3>
                 </div>        
             </AppBar>
             <div className="App">
