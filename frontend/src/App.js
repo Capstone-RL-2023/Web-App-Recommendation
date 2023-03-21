@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import "./App.css";
 import Button from "@mui/material/Button";
 import AppBar from "@mui/material/AppBar";
+import TextField from "@mui/material/TextField";
 import Movies from "./MovieBox";
 
 function App() {
@@ -52,6 +53,12 @@ function App() {
       });
   };
 
+  const submitUserId = (e) => {
+    if (e.keyCode === 13) {
+      getRecommendations(`/recommend?user_id=${e.target.value}`);
+    }
+  };
+
   // Using useEffect for single rendering
   useEffect(() => {
     getRecommendations("/recommend");
@@ -61,6 +68,14 @@ function App() {
     <div>
       <AppBar position="static" title="">
         <h3>Recommendation System</h3>
+        <TextField
+          id="user-id"
+          label="User ID"
+          type="number"
+          variant="filled"
+          size="small"
+          onKeyDown={submitUserId}
+        />
       </AppBar>
       <div className="App">
         <div>
