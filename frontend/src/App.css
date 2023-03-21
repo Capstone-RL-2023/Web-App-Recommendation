@@ -5,3 +5,9 @@
 AppBar {
   background-color: #032541;
 }
+
+.navbar{
+  display: 'flex';
+  text-align: center; 
+  font-size: large;
+}

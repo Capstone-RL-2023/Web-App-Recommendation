@@ -28,10 +28,12 @@ function App() {
     return (
         <div>
             <AppBar position="static" title = "">
-                <h3>Recommendation System</h3>
+                <div  className="navbar">
+                    <h3>Recommendation System</h3>
+                </div>        
             </AppBar>
             <div className="App">
-            <p><b>recommendation: </b>{data.recommendations}</p>
+            <p><b>Recommendation: </b>{data.recommendations}</p>
             <Button variant="contained" className="Button-stats" onClick={handleClick}>View Stats</Button>
 
             <div style={{ display: toggle ? 'block' : 'none' }}>
