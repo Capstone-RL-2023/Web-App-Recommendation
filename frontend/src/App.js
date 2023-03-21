@@ -6,18 +6,29 @@ import AppBar from "@mui/material/AppBar";
 import Movies from "./MovieBox";
 
 function App() {
-  const [data, setData] = useState([{}]);
+  const [stats, setStats] = useState({});
+  const [recommendations, setRecommendations] = useState([]);
   const [toggle, setToggle] = useState(false);
 
-  const handleClick = () => {
+  const showStats = (e) => {
+    e.preventDefault();
     setToggle(!toggle);
+  };
+
+  const newRecommendation = (e) => {
+    e.preventDefault();
+    getRecommendations("/new_recommendation");
   };
 
   const getRecommendations = async (url) => {
     const res = await fetch(url);
     const data = await res.json();
-    console.log(data);
-    setData(data);
+    setStats({
+      ndcg: data.ndcg,
+      precision: data.precision,
+      user_id: data.user_id,
+    });
+    setRecommendations(data.recommendations);
   };
 
   // Using useEffect for single rendering
@@ -25,7 +36,7 @@ function App() {
     getRecommendations("/recommend");
   }, []);
 
-  var dict_rec = data.recommendations;
+  var dict_rec = recommendations;
   const movie_array = [];
   var i = 0;
 
@@ -40,16 +51,21 @@ function App() {
         <h3>Recommendation System</h3>
       </AppBar>
       <div className="App">
-        {movie_array && (
-          <div>
-            <Movies movie_array={movie_array} />
-          </div>
-        )}
+        <div>
+          <Movies key={recommendations} movie_array={movie_array} />
+          <Button
+            variant="contained"
+            className="Button-stats"
+            onClick={newRecommendation}
+          >
+            Next Recommendation
+          </Button>
+        </div>
 
         <Button
           variant="contained"
           className="Button-stats"
-          onClick={handleClick}
+          onClick={showStats}
         >
           View Stats
         </Button>
@@ -57,15 +73,15 @@ function App() {
         <div style={{ display: toggle ? "block" : "none" }}>
           <p>
             <b>ndcg: </b>
-            {data.ndcg}
+            {stats.ndcg}
           </p>
           <p>
             <b>precision: </b>
-            {data.precision}
+            {stats.precision}
           </p>
           <p>
             <b>user_id: </b>
-            {data.user_id}
+            {stats.user_id}
           </p>
         </div>
       </div>
