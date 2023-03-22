@@ -5,8 +5,12 @@ import Button from "@mui/material/Button";
 import AppBar from "@mui/material/AppBar";
 import TextField from "@mui/material/TextField";
 import Movies from "./MovieBox";
+//import { styled } from '@material-ui/core/styles';
 
 function App() {
+  
+
+
   const [data, setData] = useState({});
   const [toggle, setToggle] = useState(false);
 
@@ -67,8 +71,10 @@ function App() {
   return (
     <div>
       <AppBar position="static" title="">
-        <h3>Recommendation System</h3>
-        <TextField
+       <div className="navbar">
+        <h3>Sequential Recommendation System</h3>
+        </div>
+        <TextField className="textfield"
           id="user-id"
           label="User ID"
           type="number"
@@ -77,31 +83,38 @@ function App() {
           onKeyDown={submitUserId}
         />
       </AppBar>
+      <br></br>
       <div className="App">
-        <div>
           <Movies
             key={
               Object.keys(data | {})?.length &&
               Object.keys(data?.recommendations)[0]
             }
             movie_array={data.movies}
-          />
-          <Button
+        />
+        <div className="buttons">
+          <but-style>
+          <Button    
             variant="contained"
             className="Button-stats"
             onClick={newRecommendation}
           >
             Next Recommendation
           </Button>
-        </div>
+          </but-style>
 
+          <but-style>
         <Button
           variant="contained"
           className="Button-stats"
           onClick={showStats}
         >
           View Stats
-        </Button>
+          </Button>
+          </but-style>
+          </div>
+
+        
         <div style={{ display: toggle ? "block" : "none" }}>
           <p>
             <b>ndcg: </b>
