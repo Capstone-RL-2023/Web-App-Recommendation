@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import "./App.js";
+import "../App.js";
 import MovieCard from "./MovieCard.js";
 
 const Home = ({ movie_array }) => {

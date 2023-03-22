@@ -4,12 +4,11 @@ import "./App.css";
 import Button from "@mui/material/Button";
 import AppBar from "@mui/material/AppBar";
 import TextField from "@mui/material/TextField";
-import Movies from "./MovieBox";
+import Movies from "./Components/MovieBox";
 //import { styled } from '@material-ui/core/styles';
 
 function App() {
   
-
 
   const [data, setData] = useState({});
   const [toggle, setToggle] = useState(false);
