@@ -67,8 +67,10 @@ function App() {
   return (
     <div>
       <AppBar position="static" title="">
-        <h3>Recommendation System</h3>
-        <TextField
+        <div className="navbar">
+          <h3>Sequential Recommendation System</h3>
+        </div>
+        <TextField className="textfield"
           id="user-id"
           label="User ID"
           type="number"
@@ -77,6 +79,7 @@ function App() {
           onKeyDown={submitUserId}
         />
       </AppBar>
+      <br></br>
       <div className="App">
         <div>
           <Movies
