@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import os
+import json
 
 from envs import OfflineEnv
 from recommender import DRRAgent
@@ -81,6 +82,7 @@ def get_recommendations():
 
         recommendations = {str(recommended_ids[i]): recommended_items[i].tolist()
                            for i in range(len(recommended_ids))}
+        
         response["recommendations"] = recommendations
         response["precision"] = precision
         response["ndcg"] = ndcg
