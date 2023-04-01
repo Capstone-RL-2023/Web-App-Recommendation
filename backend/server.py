@@ -86,6 +86,7 @@ def get_recommendations():
         response["recommendations"] = recommendations
         response["precision"] = precision
         response["ndcg"] = ndcg
+        response["reward"] = reward
         response["success"] = True
     except Exception as e:
         response["error"] = str(e)
@@ -96,13 +97,14 @@ def get_recommendations():
 @app.route('/new_recommendation', methods=['GET'])
 def get_new_recommendations():
     response = {"success": False}
-    recommended_items, recommended_ids, precision, ndcg, reward = evaluate_next(
+    recommended_items, recommended_ids, precision, ndcg, reward = evaluate(
         data_storage.recommender, data_storage.env, check_movies=True, top_k=TOP_K)
     recommendations = {str(recommended_ids[i]): recommended_items[i].tolist(
     ) for i in range(len(recommended_ids))}
     response["recommendations"] = recommendations
     response["precision"] = precision
     response["ndcg"] = ndcg
+    response["reward"] = reward
     response["success"] = True
     return response, 200
 
