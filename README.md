@@ -15,10 +15,10 @@
 ## Dataset
 - MovieLens 1M
 
-## How to run the Project
-1. clone the repo
-2. cd to the backend and run the server.py (python server.py)
-3. In a different prompt, cd to the frontend folder and then type "npm start".
+## Steps to run the Project
+1. Clone the repo through https://github.com/Capstone-RL-2023/Web-App-Recommendation.git
+2. Then, cd to the backend and run the server.py (python server.py)
+3. Open new prompt/terminal window, and cd to the frontend folder and then type "npm start".
 
 ## Functionality
 The frontend will have the following functions. 
